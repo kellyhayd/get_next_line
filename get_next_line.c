@@ -23,9 +23,7 @@ char	*get_next_line(int fd)
 	char		buffer[BUFFER_SIZE];
 	int			i;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || (read(fd, buffer, 1) < 1))
-		return (0);
-	if (!tmp)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
 	while (!ft_strchr(tmp, '\n'))
 	{
