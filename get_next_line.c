@@ -11,92 +11,129 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
-char	*ft_strjoin(char const *s1, char const *s2);
-size_t	ft_strlen(const char *s);
-char	*ft_strchr(const char *s, int c);
+
+// size_t	ft_strlen(const char *s)
+// {
+// 	int	size;
+
+// 	size = 0;
+// 	while (s[size] != '\0')
+// 		size++;
+// 	return (size);
+// }
+
+// char	*ft_strjoin(char const *s1, char const *s2)
+// {
+// 	int		i;
+// 	int		j;
+// 	int		size;
+// 	char	*dest;
+
+// 	if (s1 == NULL || s2 == NULL)
+// 		return (NULL);
+// 	size = ft_strlen(s1) + ft_strlen(s2) + 1;
+// 	dest = malloc (size * sizeof(char));
+// 	if (dest == NULL)
+// 		return (NULL);
+// 	i = 0;
+// 	j = 0;
+// 	while (s1[i])
+// 	{
+// 		dest[i] = s1[i];
+// 		i++;
+// 	}
+// 	while (s2[j])
+// 	{
+// 		dest[i + j] = s2[j];
+// 		j++;
+// 	}
+// 	dest[i + j] = 0;
+// 	return (dest);
+// }
+
+// char	*ft_strchr(const char *s, int c)
+// {
+// 	while (*s)
+// 	{
+// 		if (*s == (unsigned char)c)
+// 			return ((char *)s);
+// 		s++;
+// 	}
+// 	if (c == 0)
+// 		return ((char *)s);
+// 	return (NULL);
+// }
 
 char	*get_next_line(int fd)
 {
-	static char	*tmp;
-	char		buffer[BUFFER_SIZE];
-	int			i;
+	char		*line;
+	char		*tmp;
+	static char	buffer[BUFFER_SIZE + 1];
+	size_t		i;
+	size_t		j;
+	ssize_t		nbytes;
+	size_t		len;
+	int			is_eol;
+	t_list		*lst;
+	t_list		*new_node;
+	t_list		*last_node;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (0);
-	while (!ft_strchr(tmp, '\n'))
+		return (NULL);
+	lst = NULL;
+	is_eol = 0;
+	nbytes = 1;
+	len = 0;
+	while (!is_eol && nbytes > 0)
 	{
-		while (read(fd, buffer, 1) != '\0')
+		i = 0;
+		while (i != BUFFER_SIZE && !is_eol && (nbytes = read(fd, &buffer[i], 1)) > 0)
 		{
-			if (buffer == '\n')
-				break;
-			tmp[i] = &buffer;
+			if (buffer[i] == '\n')
+				is_eol = 1;
 			i++;
 		}
-		// free(buffer);
+		len += i;
+		if (i > 0)
+		{
+			buffer[i] = '\0';
+			tmp = ft_strdup(buffer);
+			new_node = ft_lstnew((void *)tmp);
+			if (lst == NULL)
+				lst = new_node;
+			else
+				last_node->next = new_node;
+			last_node = new_node;
+		}
 	}
-	*tmp = '\0';
-	printf("%s\n", tmp);
-	return (tmp);
-}
-
-
-size_t	ft_strlen(const char *s)
-{
-	int	size;
-
-	size = 0;
-	while (s[size] != '\0')
-		size++;
-	return (size);
-}
-
-char	*ft_strjoin(char const *s1, char const *s2)
-{
-	int		i;
-	int		j;
-	int		size;
-	char	*dest;
-
-	if (s1 == NULL || s2 == NULL)
+	if (nbytes < 0)
+	{
+		if (lst != NULL)
+			ft_lstclear(&lst, free);
 		return (NULL);
-	size = ft_strlen(s1) + ft_strlen(s2) + 1;
-	dest = malloc (size * sizeof(char));
-	if (dest == NULL)
+	}
+	if (lst == NULL)
 		return (NULL);
+	line = (char *)malloc(len + 1);
+	new_node = lst;
 	i = 0;
-	j = 0;
-	while (s1[i])
+	while (new_node)
 	{
-		dest[i] = s1[i];
-		i++;
+		tmp = (char *)new_node->content;
+		j = 0;
+		while (tmp[j] != '\0')
+			line[i++] = tmp[j++];
+		new_node = new_node->next;
 	}
-	while (s2[j])
-	{
-		dest[i + j] = s2[j];
-		j++;
-	}
-	dest[i + j] = 0;
-	return (dest);
+	line[i] = '\0';
+	ft_lstclear(&lst, free);
+	return (line);
 }
 
-char	*ft_strchr(const char *s, int c)
-{
-	while (*s)
-	{
-		if (*s == (unsigned char)c)
-			return ((char *)s);
-		s++;
-	}
-	if (c == 0)
-		return ((char *)s);
-	return (NULL);
-}
+// int main () {
+// 	int	fd = open("gnlTester/files/empty", O_RDONLY);
 
-int main () {
-	int	fd = open("texto_exemplo", O_RDONLY);
-
-	printf("%s\n", get_next_line(fd));
-	return (0);
-}
+// 	get_next_line(fd);
+// 	return (0);
+// }
