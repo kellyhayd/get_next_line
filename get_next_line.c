@@ -6,7 +6,7 @@
 /*   By: krocha-h <krocha-h@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 12:54:46 by krocha-h          #+#    #+#             */
-/*   Updated: 2023/11/17 12:33:31 by krocha-h         ###   ########.fr       */
+/*   Updated: 2023/11/17 15:54:31 by krocha-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ static char	*copy_lst(t_list *lst, t_list *new_node, size_t len)
 	final_read = malloc((len + 1) * sizeof(char));
 	if (!final_read)
 		return (NULL);
+	tmp = NULL;
 	i = 0;
 	while (new_node)
 	{
@@ -52,6 +53,8 @@ static char	*create_line(char *final_read)
 	len_line = 0;
 	while (final_read[len_line] != '\n' && final_read[len_line] != '\0')
 		len_line++;
+	if (final_read[len_line] == '\n')
+		len_line++;
 	line = malloc((len_line + 1) * sizeof(char));
 	if (!line)
 		return (NULL);
@@ -73,16 +76,22 @@ static char	*create_line(char *final_read)
 static char	*create_rest(char *final_read, size_t len)
 {
 	char	*rest;
-	int		i;
-	int		j;
+	size_t		i;
+	size_t		j;
 
 	i = 0;
+	rest = NULL;
 	while (final_read[i] != '\n' && final_read[i] != '\0')
 		i++;
 	if (final_read[i] == '\n')
 		i++;
-	rest = malloc((len - i) * sizeof(char));
-	if (!rest)
+	if (len > i)
+	{
+		rest = malloc((len - i) * sizeof(char));
+		if (!rest)
+			return (NULL);
+	}
+	else
 		return (NULL);
 	j = 0;
 	while (final_read[i] != '\0')
@@ -109,39 +118,44 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
+	i = 0;
 	if (rest != (void *)0)
 	{
-		new_node = ft_lstnew((void *)rest);
-		lst = new_node;
-		last_node = new_node;
+		len = ft_strlen(rest);
+		while (i < len && rest[i] != '\n')
+			i++;
+		if (rest[i] == '\n')
+		{
+			i = 0;
+			line = create_line(rest);
+			rest = create_rest(rest, len);
+			return (line);
+		}
+		else
+		{
+			new_node = ft_lstnew((void *)rest);
+			lst = new_node;
+			last_node = new_node;
+		}
 	}
 	else
-	{
 		lst = NULL;
-		rest = NULL;
-	}
 	is_eol = 0;
 	nbytes = 1;
-	len = 0;
 	while (!is_eol && nbytes > 0)
 	{
 		nbytes = read(fd, buffer, BUFFER_SIZE);
 		i = 0;
 		if (nbytes > 0)
 		{
-			while (buffer[i] != '\n' && i != BUFFER_SIZE)
+			while (i != BUFFER_SIZE && buffer[i] != '\n' && buffer[i] != '\0')
 				i++;
-			if (buffer[i] == '\n')
+			if (buffer[i] == '\n' || buffer[i] == '\0')
 			{
 				is_eol = 1;
 				i++;
 			}
 			len += nbytes;
-		}
-		else
-			return (NULL);
-		if (i > 0)
-		{
 			buffer[nbytes] = '\0';
 			tmp = ft_strdup(buffer);
 			new_node = ft_lstnew((void *)tmp);
@@ -151,6 +165,8 @@ char	*get_next_line(int fd)
 				last_node->next = new_node;
 			last_node = new_node;
 		}
+		else
+			return (NULL);
 	}
 	if (lst == NULL)
 		return (NULL);

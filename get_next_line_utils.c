@@ -6,7 +6,7 @@
 /*   By: krocha-h <krocha-h@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 12:55:04 by krocha-h          #+#    #+#             */
-/*   Updated: 2023/11/17 09:41:11 by krocha-h         ###   ########.fr       */
+/*   Updated: 2023/11/17 15:14:22 by krocha-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,62 +49,41 @@ char	*ft_strdup(const char *s)
 	return (dest);
 }
 
-t_list  *ft_lstnew(void *content)
+t_list	*ft_lstnew(void *content)
 {
-    t_list  *newlst;
+	t_list	*newlst;
 
-    newlst = malloc(sizeof(t_list));
-    if (!newlst)
-        return (NULL);
-    newlst->content = content;
-    newlst->next = NULL;
-    return (newlst);
+	newlst = malloc(sizeof(t_list));
+	if (!newlst)
+		return (NULL);
+
+	newlst->content = content;
+	newlst->next = NULL;
+	return (newlst);
 }
-
-// /* Adds the node ’new’ at the end of the list */
-// void    ft_lstadd_back(t_list **lst, t_list *new)
-// {
-//     t_list  *last;
-
-//     last = ft_lstlast(*lst);
-//     if (!last)
-//         *lst= new;
-//     else
-//         last->next = new;
-// }
-
-// /* Returns the last node of the list */
-// t_list  *ft_lstlast(t_list *lst)
-// {
-//     if (!lst)
-//         return (NULL);
-//     while (lst->next)
-//         lst = lst->next;
-//     return(lst);
-// }
 
 /* Deletes and frees the given node and every successor of that node, using the
 function ’del’ and free. Finally, the pointer to the list must be set to NULL */
-void    ft_lstclear(t_list **lst, void (*del)(void*))
+void	ft_lstclear(t_list **lst, void (*del)(void*))
 {
-    t_list  *tmp;
+	t_list	*tmp;
 
-    while (*lst)
-    {
-        tmp = (*lst)->next;
-        ft_lstdelone(*lst, del);
-        *lst = tmp;
-    }
-    *lst = NULL;
+	while (*lst)
+	{
+		tmp = (*lst)->next;
+		ft_lstdelone(*lst, del);
+		*lst = tmp;
+	}
+	*lst = NULL;
 }
 
 /* Takes as a parameter a node and frees the memory of the node’s content using
 the function ’del’ given as a parameter and free the node. The memory of
 ’next’ must not be freed */
-void    ft_lstdelone(t_list *lst, void (*del)(void*))
+void	ft_lstdelone(t_list *lst, void (*del)(void*))
 {
-    if (!lst)
-        return;
-    del(lst->content);
-    free(lst);
+	if (!lst)
+		return;
+	del(lst->content);
+	free(lst);
 }
