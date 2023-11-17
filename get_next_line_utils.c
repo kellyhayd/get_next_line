@@ -6,7 +6,7 @@
 /*   By: krocha-h <krocha-h@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 12:55:04 by krocha-h          #+#    #+#             */
-/*   Updated: 2023/11/14 15:43:39 by krocha-h         ###   ########.fr       */
+/*   Updated: 2023/11/17 09:41:11 by krocha-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,27 +61,27 @@ t_list  *ft_lstnew(void *content)
     return (newlst);
 }
 
-/* Adds the node ’new’ at the end of the list */
-void    ft_lstadd_back(t_list **lst, t_list *new)
-{
-    t_list  *last;
+// /* Adds the node ’new’ at the end of the list */
+// void    ft_lstadd_back(t_list **lst, t_list *new)
+// {
+//     t_list  *last;
 
-    last = ft_lstlast(*lst);
-    if (!last)
-        *lst= new;
-    else
-        last->next = new;
-}
+//     last = ft_lstlast(*lst);
+//     if (!last)
+//         *lst= new;
+//     else
+//         last->next = new;
+// }
 
-/* Returns the last node of the list */
-t_list  *ft_lstlast(t_list *lst)
-{
-    if (!lst)
-        return (NULL);
-    while (lst->next)
-        lst = lst->next;
-    return(lst);
-}
+// /* Returns the last node of the list */
+// t_list  *ft_lstlast(t_list *lst)
+// {
+//     if (!lst)
+//         return (NULL);
+//     while (lst->next)
+//         lst = lst->next;
+//     return(lst);
+// }
 
 /* Deletes and frees the given node and every successor of that node, using the
 function ’del’ and free. Finally, the pointer to the list must be set to NULL */
