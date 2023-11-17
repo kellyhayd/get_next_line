@@ -6,7 +6,7 @@
 /*   By: krocha-h <krocha-h@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 12:54:46 by krocha-h          #+#    #+#             */
-/*   Updated: 2023/11/17 11:47:51 by krocha-h         ###   ########.fr       */
+/*   Updated: 2023/11/17 12:33:31 by krocha-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 #include <stdlib.h>
 #include <unistd.h>
-#include <fcntl.h>
 
 static char	*copy_lst(t_list *lst, t_list *new_node, size_t len)
 {
@@ -117,7 +116,10 @@ char	*get_next_line(int fd)
 		last_node = new_node;
 	}
 	else
+	{
 		lst = NULL;
+		rest = NULL;
+	}
 	is_eol = 0;
 	nbytes = 1;
 	len = 0;
@@ -134,11 +136,13 @@ char	*get_next_line(int fd)
 				is_eol = 1;
 				i++;
 			}
+			len += nbytes;
 		}
-		len += BUFFER_SIZE;
+		else
+			return (NULL);
 		if (i > 0)
 		{
-			buffer[BUFFER_SIZE] = '\0';
+			buffer[nbytes] = '\0';
 			tmp = ft_strdup(buffer);
 			new_node = ft_lstnew((void *)tmp);
 			if (lst == NULL)
@@ -148,12 +152,6 @@ char	*get_next_line(int fd)
 			last_node = new_node;
 		}
 	}
-	if (nbytes < 0)
-	{
-		if (lst != NULL)
-			ft_lstclear(&lst, free);
-		return (NULL);
-	}
 	if (lst == NULL)
 		return (NULL);
 	new_node = lst;
@@ -161,19 +159,4 @@ char	*get_next_line(int fd)
 	line = create_line(final_read);
 	rest = create_rest(final_read, len);
 	return (line);
-}
-
-#include <stdio.h>
-
-int main () {
-	int	fd = open("text_new_line", O_RDONLY);
-
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-	close (fd);
-	fd = open("text_new_line", O_RDONLY);
-	printf("%s\n", get_next_line(9));
-	printf("%s\n", get_next_line(fd));
-	close (fd);
-	return (0);
 }
