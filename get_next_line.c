@@ -6,7 +6,7 @@
 /*   By: haydkelly <haydkelly@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 09:00:16 by haydkelly         #+#    #+#             */
-/*   Updated: 2023/11/21 19:09:56 by haydkelly        ###   ########.fr       */
+/*   Updated: 2023/11/21 19:46:41 by haydkelly        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,29 +15,25 @@
 
 void	clean_lst(t_list **lst, t_list *last_node)
 {
-	t_list	*rest;
-	char	*tmp;
 	size_t	i;
 	size_t	j;
 
-	tmp = malloc(BUFFER_SIZE + 1);
-	if (!tmp)
-		free(tmp);
-	rest = malloc(sizeof(t_list));
-	if (!rest)
-		free(rest);
-	if (!tmp || !rest)
+	if (!last_node)
 		return ;
-	i = 0;
 	j = 0;
-	while (last_node->content[i] && last_node->content[i] != '\n')
+	while (last_node->content[j] && last_node->content[j] != '\n')
+		j++;
+	if (last_node->content[j] == '\n')
+		j++;
+	i = 0;
+	while (last_node->content[j])
+	{	
+		last_node->content[i] = last_node->content[j];
 		i++;
-	while (last_node->content[i] && last_node->content[++i])
-		tmp[j++] = last_node->content[i];
-	tmp[j] = '\0';
-	rest->content = tmp;
-	rest->next = NULL;
-	ft_lst_remake(lst, rest, tmp);
+		j++;
+	}
+	last_node->content[i] = '\0';
+	lst_remake(lst);
 }
 
 char	*create_line(t_list *lst)
@@ -77,7 +73,7 @@ void	create_lst(int fd, t_list **lst, t_list **last_node)
 	char	*buffer;
 	int		nbytes;
 	
-	while (!is_nl(*last_node))
+	while (!has_nl(*last_node))
 	{
 		buffer = malloc(BUFFER_SIZE + 1);
 		if (!buffer)
@@ -108,7 +104,6 @@ char	*get_next_line(int fd)
 	last_node = ft_lstlast(lst);
 	create_lst(fd, &lst, &last_node);
 	new_line = create_line(lst);
-	if (lst)
-		clean_lst(&lst, last_node);
+	clean_lst(&lst, last_node);
 	return (new_line);
 }

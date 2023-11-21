@@ -6,27 +6,23 @@
 /*   By: haydkelly <haydkelly@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 12:55:04 by krocha-h          #+#    #+#             */
-/*   Updated: 2023/11/21 18:59:57 by haydkelly        ###   ########.fr       */
+/*   Updated: 2023/11/21 19:46:41 by haydkelly        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdlib.h>
 
-int	is_nl(t_list *lst)
+int	has_nl(t_list *lst)
 {
-	int	i;
+	size_t	i;
 
-	while (lst)
+	i = 0;
+	while (i <= BUFFER_SIZE && lst && lst->content[i])
 	{
-		i = 0;
-		while (i <= BUFFER_SIZE && lst->content[i])
-		{
-			if (lst->content[i] == '\n')
-				return (1);
-			++i;
-		}
-		lst = lst->next;
+		if (lst->content[i] == '\n')
+			return (1);
+		i++;
 	}
 	return (0);
 }
@@ -92,25 +88,23 @@ size_t	get_line_len(t_list *lst)
 	return (len);
 }
 
-void	ft_lst_remake(t_list **lst, t_list *rest, char *tmp)
+void	lst_remake(t_list **lst)
 {
-	t_list	*buffer;
+	t_list	*node;
 
 	if (!lst)
 		return ;
-	while (*lst)
+	while ((*lst)->next)
 	{
-		buffer = (*lst)->next;
+		node = *lst;
+		*lst = (*lst)->next;
+		free(node->content);
+		free(node);
+	}
+	if (!(*lst)->content[0])
+	{
 		free((*lst)->content);
 		free(*lst);
-		*lst = buffer;
-	}
-	*lst = NULL;
-	if (rest->content[0])
-		*lst = rest;
-	else
-	{
-		free(tmp);
-		free(rest);
+		*lst = NULL;
 	}
 }
