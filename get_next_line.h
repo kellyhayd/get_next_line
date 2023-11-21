@@ -6,7 +6,7 @@
 /*   By: haydkelly <haydkelly@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 12:55:14 by krocha-h          #+#    #+#             */
-/*   Updated: 2023/11/21 16:34:57 by haydkelly        ###   ########.fr       */
+/*   Updated: 2023/11/21 19:08:53 by haydkelly        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,13 @@ typedef struct s_list
 
 char	*get_next_line(int fd);
 int		is_nl(t_list *lst);
-int		get_line_len(t_list *list);
-t_list  *ft_lstlast(t_list *lst);
-void	lstadd_node(t_list **list, char *buf);
-void	clean_lst(t_list **lst);
+size_t	get_line_len(t_list *list);
+t_list	*ft_lstlast(t_list *lst);
+int		lstadd_node(t_list **lst, t_list **last_node, char *buffer);
+void	clean_lst(t_list **lst, t_list *last_node);
 void	create_str(t_list *lst, char *line);
 char	*create_line(t_list *lst);
-void	create_lst(t_list **lst, int fd);
+void	create_lst(int fd, t_list **lst, t_list **last_node);
 void	ft_lst_remake(t_list **lst, t_list *rest, char *tmp);
 
 #endif

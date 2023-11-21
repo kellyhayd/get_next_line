@@ -6,7 +6,7 @@
 /*   By: haydkelly <haydkelly@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 12:55:04 by krocha-h          #+#    #+#             */
-/*   Updated: 2023/11/21 18:25:19 by haydkelly        ###   ########.fr       */
+/*   Updated: 2023/11/21 18:59:57 by haydkelly        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ t_list  *ft_lstlast(t_list *lst)
 
 void	create_str(t_list *lst, char *line)
 {
-	int		i;
-	int		j;
+	size_t	i;
+	size_t	j;
 
 	if (!lst)
 		return ;
@@ -55,24 +55,24 @@ void	create_str(t_list *lst, char *line)
 		{
 			if (lst->content[j] == '\n')
 			{
-				line[i++] = '\n';
-				line[i] = '\0';
+				line[i] = '\n';
+				line[i + 1] = '\0';
 				return ;
 			}
-			line[i++] = lst->content[j++];
+			line[i] = lst->content[j];
+			j++;
+			i++;
 		}
 		lst = lst->next;	
 	}
 	line[i] = '\0';
 }
 
-int	get_line_len(t_list *lst)
+size_t	get_line_len(t_list *lst)
 {
-	int	i;
-	int	len;
+	size_t	i;
+	size_t	len;
 
-	if (!lst)
-		return (0);
 	len = 0;
 	while (lst)
 	{
@@ -81,11 +81,11 @@ int	get_line_len(t_list *lst)
 		{
 			if (lst->content[i] == '\n')
 			{
-				++len;
+				len++;
 				return (len);
 			}
-			++i;
-			++len;
+			i++;
+			len++;
 		}
 		lst = lst->next;
 	}	
