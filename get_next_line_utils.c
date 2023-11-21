@@ -3,88 +3,114 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: krocha-h <krocha-h@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: haydkelly <haydkelly@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 12:55:04 by krocha-h          #+#    #+#             */
-/*   Updated: 2023/11/17 15:14:22 by krocha-h         ###   ########.fr       */
+/*   Updated: 2023/11/21 18:25:19 by haydkelly        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdlib.h>
 
-char	*ft_strchr(const char *s, int c)
+int	is_nl(t_list *lst)
 {
-	while (*s)
+	int	i;
+
+	while (lst)
 	{
-		if (*s == (unsigned char)c)
-			return ((char *)s);
-		s++;
+		i = 0;
+		while (i <= BUFFER_SIZE && lst->content[i])
+		{
+			if (lst->content[i] == '\n')
+				return (1);
+			++i;
+		}
+		lst = lst->next;
 	}
-	if (c == 0)
-		return ((char *)s);
-	return (NULL);
+	return (0);
 }
 
-char	*ft_strncpy(char *dest, const char *src, size_t n)
+t_list  *ft_lstlast(t_list *lst)
 {
-	size_t	i;
+    if (lst == NULL)
+        return (NULL);
+    while (lst->next)
+        lst = lst->next;
+    return(lst);
+}
 
+void	create_str(t_list *lst, char *line)
+{
+	int		i;
+	int		j;
+
+	if (!lst)
+		return ;
 	i = 0;
-	while (i < n && src[i] != '\0')
+	while (lst)
 	{
-		dest[i] = src[i];
-		i++;
+		j = 0;
+		while (lst->content[j])
+		{
+			if (lst->content[j] == '\n')
+			{
+				line[i++] = '\n';
+				line[i] = '\0';
+				return ;
+			}
+			line[i++] = lst->content[j++];
+		}
+		lst = lst->next;	
 	}
-	while (i < n)
-		dest[i++] = '\0';
-	return (dest);
+	line[i] = '\0';
 }
 
-/* Allocate and returns a pointer to a null-terminated byte string,
-which is a duplicate of the string pointed to by s.*/
-char	*ft_strndup(const char *s, size_t n)
+int	get_line_len(t_list *lst)
 {
-	size_t	i;
-	char	*dest;
+	int	i;
+	int	len;
 
-	dest = malloc((n + 1) * sizeof(char));
-	if (!dest)
-		return (NULL);
-	i = 0;
-	while (i < n && s[i] != '\0')
+	if (!lst)
+		return (0);
+	len = 0;
+	while (lst)
 	{
-		dest[i] = s[i];
-		i++;
-	}
-	while (i < n + 1)
-		dest[i++] = '\0';
-	return (dest);
+		i = 0;
+		while (lst->content[i])
+		{
+			if (lst->content[i] == '\n')
+			{
+				++len;
+				return (len);
+			}
+			++i;
+			++len;
+		}
+		lst = lst->next;
+	}	
+	return (len);
 }
 
-t_list	*ft_lstnew(void *content)
+void	ft_lst_remake(t_list **lst, t_list *rest, char *tmp)
 {
-	t_list	*newlst;
+	t_list	*buffer;
 
-	newlst = malloc(sizeof(t_list));
-	if (!newlst)
-		return (NULL);
-	newlst->content = content;
-	newlst->next = NULL;
-	return (newlst);
-}
-
-/* Deletes and frees the given node and every successor of that node, using the
-function ’del’ and free. Finally, the pointer to the list must be set to NULL */
-void	ft_lstclear(t_list **lst, void (*del)(void*))
-{
-	t_list	*tmp;
-
+	if (!lst)
+		return ;
 	while (*lst)
 	{
-		tmp = (*lst)->next;
-		del((*lst)->content);
+		buffer = (*lst)->next;
+		free((*lst)->content);
 		free(*lst);
-		*lst = tmp;
+		*lst = buffer;
 	}
 	*lst = NULL;
+	if (rest->content[0])
+		*lst = rest;
+	else
+	{
+		free(tmp);
+		free(rest);
+	}
 }

@@ -3,33 +3,38 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: krocha-h <krocha-h@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: haydkelly <haydkelly@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 12:55:14 by krocha-h          #+#    #+#             */
-/*   Updated: 2023/11/17 10:15:20 by krocha-h         ###   ########.fr       */
+/*   Updated: 2023/11/21 16:34:57 by haydkelly        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BUFFER_SIZE
-# define BUFFER_SIZE 42
-# endif
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
+
+# ifndef BUFFER_SIZE
+# define BUFFER_SIZE 1
+# endif
 
 # include <unistd.h>
 # include <stdlib.h>
 
 typedef struct s_list
 {
-	void	*content;
+	char			*content;
 	struct s_list	*next;
 }	t_list;
 
 char	*get_next_line(int fd);
-char	*ft_strchr(const char *s, int c);
-char	*ft_strncpy(char *dest, const char *src, size_t n);
-char	*ft_strndup(const char *s, size_t n);
-void	ft_lstclear(t_list **lst, void (*del)(void*));
-t_list  *ft_lstnew(void *content);
+int		is_nl(t_list *lst);
+int		get_line_len(t_list *list);
+t_list  *ft_lstlast(t_list *lst);
+void	lstadd_node(t_list **list, char *buf);
+void	clean_lst(t_list **lst);
+void	create_str(t_list *lst, char *line);
+char	*create_line(t_list *lst);
+void	create_lst(t_list **lst, int fd);
+void	ft_lst_remake(t_list **lst, t_list *rest, char *tmp);
 
 #endif
