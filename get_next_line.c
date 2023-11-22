@@ -6,7 +6,7 @@
 /*   By: haydkelly <haydkelly@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 09:00:16 by haydkelly         #+#    #+#             */
-/*   Updated: 2023/11/21 19:46:41 by haydkelly        ###   ########.fr       */
+/*   Updated: 2023/11/21 22:02:36 by haydkelly        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	lstadd_node(t_list **lst, t_list **last_node, char *buffer)
 	return (1);
 }
 
-void	create_lst(int fd, t_list **lst, t_list **last_node)
+int	create_lst(int fd, t_list **lst, t_list **last_node)
 {
 	char	*buffer;
 	int		nbytes;
@@ -77,20 +77,21 @@ void	create_lst(int fd, t_list **lst, t_list **last_node)
 	{
 		buffer = malloc(BUFFER_SIZE + 1);
 		if (!buffer)
-			return ;
+			return (0);
 		nbytes = read(fd, buffer, BUFFER_SIZE);
 		if (nbytes <= 0)
 		{
 			free(buffer);
-			return ;
+			return (nbytes == 0);
 		}
 		buffer[nbytes] = '\0';
 		if (!lstadd_node(lst, last_node, buffer))
 		{
 			free(buffer);
-			return ;
+			return (0);
 		}
 	}
+	return (1);
 }
 
 char	*get_next_line(int fd)
@@ -102,7 +103,11 @@ char	*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	last_node = ft_lstlast(lst);
-	create_lst(fd, &lst, &last_node);
+	if (!create_lst(fd, &lst, &last_node))
+	{
+		clean_lst(&lst, last_node);
+		return (NULL);
+	}
 	new_line = create_line(lst);
 	clean_lst(&lst, last_node);
 	return (new_line);

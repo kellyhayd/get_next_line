@@ -6,7 +6,7 @@
 /*   By: haydkelly <haydkelly@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 12:55:14 by krocha-h          #+#    #+#             */
-/*   Updated: 2023/11/21 19:26:57 by haydkelly        ###   ########.fr       */
+/*   Updated: 2023/11/21 22:02:50 by haydkelly        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,15 @@ int		lstadd_node(t_list **lst, t_list **last_node, char *buffer);
 void	clean_lst(t_list **lst, t_list *last_node);
 void	create_str(t_list *lst, char *line);
 char	*create_line(t_list *lst);
-void	create_lst(int fd, t_list **lst, t_list **last_node);
+
+/**
+ * Create list returns `0` in the following failure scenarios:
+ *
+ * - Buffer allocation fails
+ * - File descriptor read failes with a negative result
+ * - Adding a node to the list fails
+ */
+int		create_lst(int fd, t_list **lst, t_list **last_node);
 void	lst_remake(t_list **lst);
 
 #endif
