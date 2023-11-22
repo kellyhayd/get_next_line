@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haydkelly <haydkelly@student.42.fr>        +#+  +:+       +#+        */
+/*   By: krocha-h <krocha-h@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 09:00:16 by haydkelly         #+#    #+#             */
-/*   Updated: 2023/11/21 22:02:36 by haydkelly        ###   ########.fr       */
+/*   Updated: 2023/11/22 12:37:32 by krocha-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	clean_lst(t_list **lst, t_list *last_node)
 		j++;
 	i = 0;
 	while (last_node->content[j])
-	{	
+	{
 		last_node->content[i] = last_node->content[j];
 		i++;
 		j++;
@@ -36,11 +36,39 @@ void	clean_lst(t_list **lst, t_list *last_node)
 	lst_remake(lst);
 }
 
+void	create_str(t_list *lst, char *line)
+{
+	size_t	i;
+	size_t	j;
+
+	if (!lst)
+		return ;
+	i = 0;
+	while (lst)
+	{
+		j = 0;
+		while (lst->content[j])
+		{
+			if (lst->content[j] == '\n')
+			{
+				line[i] = '\n';
+				line[i + 1] = '\0';
+				return ;
+			}
+			line[i] = lst->content[j];
+			j++;
+			i++;
+		}
+		lst = lst->next;
+	}
+	line[i] = '\0';
+}
+
 char	*create_line(t_list *lst)
 {
 	char	*line;
 	size_t	len;
-	
+
 	if (!lst)
 		return (NULL);
 	len = get_line_len(lst);
@@ -51,28 +79,11 @@ char	*create_line(t_list *lst)
 	return (line);
 }
 
-int	lstadd_node(t_list **lst, t_list **last_node, char *buffer)
-{
-	t_list	*new_node;
-
-	new_node = malloc(sizeof(t_list));
-	if (!new_node)
-		return (0);
-	if (!*last_node)
-		*lst = new_node;
-	else
-		(*last_node)->next = new_node;
-	new_node->content = buffer;
-	new_node->next = NULL;
-	(*last_node) = new_node;
-	return (1);
-}
-
 int	create_lst(int fd, t_list **lst, t_list **last_node)
 {
 	char	*buffer;
 	int		nbytes;
-	
+
 	while (!has_nl(*last_node))
 	{
 		buffer = malloc(BUFFER_SIZE + 1);
