@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: krocha-h <krocha-h@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: haydkelly <haydkelly@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 09:00:16 by haydkelly         #+#    #+#             */
-/*   Updated: 2023/11/22 09:53:48 by krocha-h         ###   ########.fr       */
+/*   Updated: 2023/11/23 08:55:06 by haydkelly        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,29 +107,19 @@ int	create_lst(int fd, t_list **lst, t_list **last_node)
 
 char	*get_next_line(int fd)
 {
-	static t_files	*active_fds;
-	t_files			*tmp;
+	static t_list	*lst[1024];
 	t_list			*last_node;
 	char			*new_line;
-
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	
+	if (fd < 0 || fd > 1024 || BUFFER_SIZE <= 0)
 		return (NULL);
-	tmp = active_fds;
-	while (tmp && tmp->fd != fd)
-		tmp = tmp->next;
-	if (!tmp)
+	last_node = ft_lstlast(lst[fd]);
+	if (!create_lst(fd, &lst[fd], &last_node))
 	{
-		tmp = malloc(sizeof(t_files));
-		if (!tmp)
-			return (NULL);
-		tmp->fd = fd;
-		tmp->lst = NULL;
-		tmp->next = active_fds;
-		active_fds = tmp;
+		clean_lst(&lst[fd], last_node);
+		return (NULL);
 	}
-	last_node = ft_lstlast(tmp->lst);
-	create_lst(fd, &tmp->lst, &last_node);
-	new_line = create_line(tmp->lst);
-	clean_lst(&tmp->lst, last_node);
+	new_line = create_line(lst[fd]);
+	clean_lst(&lst[fd], last_node);
 	return (new_line);
 }
