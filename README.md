@@ -42,3 +42,26 @@ BUFFER_SIZE flag in addition to the usual flags.
   get_next_line() function.
 
 - Add all the helper functions you need in the get_next_line_utils.c file.
+
+<h2> 🪛 Approach </h2>
+
+Function get_next_line reads `BUFFER_SIZE` characters at time, while not finding a `\n`, storing `buffer` in a linked list.
+When `\n` is found, the characters are copied to a `char` that will be returned.
+The remnant character from the reading that are after the `\n` are storage in the static list.
+
+<h2> 🌟 Bonus Part </h2>
+
+<h4> ⭐ Requirements </h4>
+
+* Develop get_next_line() using only one static variable.
+  
+* Your get_next_line() can manage multiple file descriptors at the same time.
+  * For example, if you can read from the file descriptors 3, 4 and 5, you should be
+able to read from a different fd per call without losing the reading thread of each
+file descriptor or returning a line from another fd.
+  * It means that you should be able to call get_next_line() to read from fd 3, then
+fd 4, then 5, then once again 3, once again 4, and so forth.
+
+<h4> ⭐ Approach </h4>
+
+As for storing the remainder of the last read of different files, the static variable is a linked list array, using it's position as fd identification.
