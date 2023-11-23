@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_bonus.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: krocha-h <krocha-h@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: haydkelly <haydkelly@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 12:55:14 by krocha-h          #+#    #+#             */
-/*   Updated: 2023/11/22 10:57:58 by krocha-h         ###   ########.fr       */
+/*   Updated: 2023/11/23 09:01:04 by haydkelly        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,6 @@ typedef struct s_list
 	char			*content;
 	struct s_list	*next;
 }	t_list;
-
-typedef struct s_files
-{
-	int				fd;
-	t_list			*lst;
-	struct s_files	*next;
-}	t_files;
 
 /*
  * @brief Reads `BUFFER_SIZE` characters at time, returning the next
