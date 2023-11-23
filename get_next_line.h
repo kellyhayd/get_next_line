@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: krocha-h <krocha-h@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: haydkelly <haydkelly@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 12:55:14 by krocha-h          #+#    #+#             */
-/*   Updated: 2023/11/22 10:58:07 by krocha-h         ###   ########.fr       */
+/*   Updated: 2023/11/23 08:41:18 by haydkelly        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char	*get_next_line(int fd);
  * @brief Allocates and creates the string that contains
  * the next line of the fd.
  *
- *  * Call `get_line_len` to calculate the length of line to allocate
+ * Call `get_line_len` to calculate the length of line to allocate
  * and `create_str` to copy every character from the nodes.
  *
  * @param *lst The list created of the reading of the file
